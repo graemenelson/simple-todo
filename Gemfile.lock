@@ -1,0 +1,18 @@
+PATH
+  remote: .
+  specs:
+    simple-todo (0.1)
+      bcrypt-ruby
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    bcrypt-ruby (3.0.1)
+    rake (0.9.2.2)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  rake
+  simple-todo!
