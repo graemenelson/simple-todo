@@ -16,6 +16,13 @@ module SimpleTodo
         SecureRandom.uuid
       end
       
+      def current_time
+        # NOTE: later on we can inject the class that will get us
+        # the current time, this way we handle timezones. For now,
+        # Time.now will work.
+        Time.now
+      end
+      
     end
   end
 end

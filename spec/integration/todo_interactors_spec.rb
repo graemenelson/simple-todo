@@ -83,4 +83,43 @@ describe "Todo" do
     
   end
   
+  describe "complete a todo" do
+    
+    subject { SimpleTodo::Interactors::CompleteTodo.new( @person_repository, @jim.uuid ) }
+    
+    before do
+      @todo_1 = @jim.add_todo( Todo.new( uuid: SecureRandom.uuid, title: "my first todo" ) )
+      @todo_2 = @jim.add_todo( Todo.new( uuid: SecureRandom.uuid, title: "my second todo" ) )
+    end
+    
+    describe "with an invalid uuid" do
+      
+      before do
+        @response = subject.call({ todo_uuid: "blahblah" })
+      end
+      
+      it "should have errors on the response" do
+        @response.errors?.must_equal( true )
+      end      
+      
+    end
+    
+    describe "with a @todo_1 uuid" do
+      
+      before do
+        @response = subject.call({ todo_uuid: @todo_1.uuid })
+      end
+      
+      it "should not have errors on response" do
+        @response.errors?.must_equal( false )
+      end
+      
+      it "should have marked @todo_1 as completed" do
+        @todo_1.completed?.must_equal( true )
+      end
+      
+    end
+    
+  end
+  
 end
