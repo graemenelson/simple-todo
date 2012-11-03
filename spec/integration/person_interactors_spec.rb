@@ -5,7 +5,7 @@ describe "Person" do
   
   before do
     @repository   = SimpleTodo::Repository.for( :person )
-    @encryptor    = SimpleTodo::Encryptors::BCrypt.new
+    @encryptor    = SimpleTodo::Encryptors::BCrypt.new(::BCrypt::Password, 1)
     @repository.clear
   end
   
