@@ -1,3 +1,5 @@
+require 'securerandom'
+
 module SimpleTodo
   module Interactors
     class Base
@@ -8,6 +10,10 @@ module SimpleTodo
         
       def reset_response
         @response = Response.new
+      end
+      
+      def generate_uuid
+        SecureRandom.uuid
       end
       
     end

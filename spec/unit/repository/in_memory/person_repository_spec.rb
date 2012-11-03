@@ -1,5 +1,6 @@
 require './spec/unit/spec_helper'
 require './lib/repository/in_memory'
+require 'securerandom'
 
 describe SimpleTodo::Repository::InMemory::PersonRepository do
   
@@ -62,8 +63,8 @@ describe SimpleTodo::Repository::InMemory::PersonRepository do
     subject { SimpleTodo::Repository::InMemory::PersonRepository.new }
     
     before do
-      @jim  = Person.new({ email: "jim@aol.com" })
-      @sara = Person.new({ email: "sara@mycompany.com" })
+      @jim  = Person.new({ uuid: SecureRandom.uuid, email: "jim@aol.com" })
+      @sara = Person.new({ uuid: SecureRandom.uuid, email: "sara@mycompany.com" })
       subject.save( @jim )
       subject.save( @sara )
     end
@@ -93,6 +94,39 @@ describe SimpleTodo::Repository::InMemory::PersonRepository do
     end
     
   end
+  
+  describe "find_by_uuid" do
+    
+    subject { SimpleTodo::Repository::InMemory::PersonRepository.new }
+    
+    before do
+      @jim  = Person.new({ uuid: SecureRandom.uuid, email: "jim@aol.com" })
+      @sara = Person.new({ uuid: SecureRandom.uuid, email: "sara@mycompany.com" })
+      subject.save( @jim )
+      subject.save( @sara )
+    end
+    
+    it "should have 2 people in the repo" do
+      subject.count.must_equal( 2 )      
+    end
+    
+    it "should return nil if trying to find by nil uuid" do
+      subject.find_by_uuid(nil).must_be_nil
+    end
+    
+    it "should return nil if trying to find by blank uuid" do
+      subject.find_by_uuid("").must_be_nil
+    end
+    
+    it "should return nil if trying to find by a non-existent uuid" do
+      subject.find_by_uuid("123123123").must_be_nil
+    end
+    
+    it "should return jim if using jim's uuid" do
+      subject.find_by_uuid( @jim.uuid ).must_equal( @jim )
+    end
+    
+  end  
   
   describe "#exists?" do
     

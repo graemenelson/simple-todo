@@ -16,6 +16,11 @@ module SimpleTodo
           people.select{|person| email == person.email}.first
         end
         
+        def find_by_uuid(uuid)
+          return nil unless uuid
+          people.select{|person| uuid == person.uuid}.first
+        end
+        
         def exists?(attributes = {})
           found = find_by_email( attributes[:email] )
           found ? true : false

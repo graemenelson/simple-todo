@@ -72,6 +72,7 @@ describe SimpleTodo::Interactors::AddPerson do
         @response.entity.email.must_equal @person.email
         @response.entity.salt.must_equal @person.salt
         @response.entity.encrypted_password.must_equal @person.encrypted_password
+        @response.entity.uuid.wont_be_nil
       end
       
       it "should call all the expected repository calls" do
