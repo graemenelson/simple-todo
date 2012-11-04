@@ -58,8 +58,7 @@ describe SimpleTodo::Interactors::Response::Errors do
         "key_1" == key.to_s ? actual_key_1 = value : actual_key_2 = value
       end
       actual_key_1.must_equal( ["key_1 error message 1", "key_1 error message 2"] )
-      actual_key_2.must_equal( ["key_2 error message 1"] )
-      
+      actual_key_2.must_equal( ["key_2 error message 1"] )      
     end
     
   end

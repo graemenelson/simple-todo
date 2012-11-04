@@ -38,3 +38,4 @@ module SimpleTodo
         
   end
 end
+require_relative 'repository/in_memory'
