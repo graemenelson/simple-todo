@@ -1,6 +1,7 @@
 require_relative 'interactors/response'
 require_relative 'interactors/base'
 require_relative 'interactors/add_person'
+require_relative 'interactors/find_person'
 require_relative 'interactors/authenticate_person'
 require_relative 'interactors/add_todo'
 require_relative 'interactors/complete_todo'

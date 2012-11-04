@@ -14,6 +14,14 @@ describe SimpleTodo::Interactors::Response::Errors do
       subject.empty?.must_equal true
     end
     
+    it "should respond to each, but not have any errors" do
+      errors = []
+      subject.each do |key, value|
+        errors.push( "#{key} #{value}")
+      end
+      errors.must_be_empty
+    end
+    
   end
   
   describe "#add and #on" do

@@ -160,4 +160,27 @@ describe "Person" do
     
   end
   
+  describe "find person" do
+    
+    subject { SimpleTodo::Interactors::FindPerson.new( @repository ) }
+    
+    before do
+      @add_person = SimpleTodo::Interactors::AddPerson.new( @repository, @encryptor )
+      @jim        = @add_person.call({ email: "jim@aol.com", password: "mypassword" }).entity
+      @sara       = @add_person.call({ email: "sara@somewhere.com", password: "mysecret" }).entity
+    end
+    
+    it "should return an error if uuid is invalid" do
+      response = subject.call( uuid: "blahblah" )
+      response.errors?.must_equal( true )
+    end
+    
+    it "should return @jim with @jim uuid" do
+      response = subject.call( uuid: @jim.uuid )
+      response.errors?.must_equal( false )
+      response.entity.must_equal( @jim )
+    end
+    
+  end
+  
 end
