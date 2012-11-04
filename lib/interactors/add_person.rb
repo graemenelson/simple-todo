@@ -19,7 +19,7 @@ module SimpleTodo
       # NOTE: would be nice to have defaults here, something like:
       #
       # def initialize(repository = Repository.for(:person), encryptor = Encryptor::BCrypt  )
-      def initialize(repository, encryptor)
+      def initialize(repository, encryptor = SimpleTodo::Encryptors::BCrypt.new)
         @repository = repository
         @encryptor  = encryptor
       end

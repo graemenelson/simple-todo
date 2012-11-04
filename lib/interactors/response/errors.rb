@@ -1,9 +1,14 @@
+require 'forwardable'
+
 module SimpleTodo
   module Interactors
     class Response
       
       class Errors
-                    
+                      
+        extend Forwardable                      
+        def_delegators :@errors, :empty?, :each
+        
         def initialize
           @errors = {}
         end
@@ -18,10 +23,6 @@ module SimpleTodo
         def on(key)
           symbolized_key = key.to_sym
           errors[symbolized_key] || []
-        end
-          
-        def empty?
-          errors.empty?
         end
           
         def any?
