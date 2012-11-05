@@ -1,5 +1,4 @@
 require './spec/unit/spec_helper'
-require 'securerandom'
 
 describe SimpleTodo::Interactors::AddTodo do
   
@@ -10,13 +9,41 @@ describe SimpleTodo::Interactors::AddTodo do
       @person_uuid  = SecureRandom.uuid
     end
     
+    describe "with missing person_uuid" do
+      
+      subject { SimpleTodo::Interactors::AddTodo.new( @repository, nil ) }
+      
+      before do
+        @repository.expect( :find_by_uuid, nil, [nil] )
+        @response = subject.call({ title: "my title" })
+      end
+      
+      it "should return a response with error on person" do
+        @response.errors.on(:person).must_equal( ["is required."] )
+      end
+      
+      it "should call all the expected methods on @repository" do
+        @repository.verify
+      end
+      
+    end
+    
     describe "with a missing title" do
       
       subject { SimpleTodo::Interactors::AddTodo.new( @repository, @person_uuid ) }
       
+      before do
+        person = OpenStruct.new
+        @repository.expect( :find_by_uuid, person, [@person_uuid] )
+        @response = subject.call({})
+      end
+      
       it "should return a response with an error on title" do
-        response = subject.call({})
-        response.errors.on(:title).must_equal( ["is required."] )
+        @response.errors.on(:title).must_equal( ["is required."] )
+      end
+      
+      it "should call all the expected methods on @repository" do
+        @repository.verify
       end
       
     end

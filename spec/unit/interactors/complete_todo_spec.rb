@@ -1,5 +1,4 @@
 require './spec/unit/spec_helper'
-require 'securerandom'
 
 describe SimpleTodo::Interactors::CompleteTodo do
   
@@ -10,18 +9,48 @@ describe SimpleTodo::Interactors::CompleteTodo do
   
   describe "#call" do
     
-    subject { SimpleTodo::Interactors::CompleteTodo.new( @person_repository, @person_uuid) }
-    
-    describe "with missing uuid" do
+    describe "with missing person_uuid" do
       
-      it "should return a response with an error on todo_uuid" do
-        response = subject.call({})
-        response.errors.on(:todo_uuid).must_equal( ["is required."] )
+      subject { SimpleTodo::Interactors::CompleteTodo.new( @person_repository, nil) }
+      
+      before do
+        @person_repository.expect( :find_by_uuid, nil, [nil] )
+        @response = subject.call({ todo_uuid: SecureRandom.uuid })
+      end
+      
+      it "should have an error on person" do
+        @response.errors.on(:person).must_equal( ["is required."] )
+      end
+      
+      it "should call the expected methods on @person_repository" do
+        @person_repository.verify
       end
       
     end
     
-    describe "with uuid that does not belong to person" do
+    describe "with missing todo uuid" do
+      
+      subject { SimpleTodo::Interactors::CompleteTodo.new( @person_repository, @person_uuid) }
+      
+      before do
+        person = OpenStruct.new
+        @person_repository.expect( :find_by_uuid, person, [@person_uuid] )
+        @response = subject.call({})
+      end
+      
+      it "should return a response with an error on todo_uuid" do        
+        @response.errors.on(:todo_uuid).must_equal( ["is required."] )
+      end
+      
+      it "should call the expected methods on @repository" do
+        @person_repository.verify
+      end
+      
+    end
+    
+    describe "with todo uuid that does not belong to person" do
+      
+      subject { SimpleTodo::Interactors::CompleteTodo.new( @person_repository, @person_uuid) }
       
       before do
         @person = OpenStruct.new( todos: [ SimpleTodo::Entity::Todo.new( uuid: SecureRandom.uuid, title: "my todo item") ] )
@@ -39,7 +68,9 @@ describe SimpleTodo::Interactors::CompleteTodo do
       
     end
     
-    describe "with exisitng uuid for given person" do
+    describe "with exisitng todo uuid for given person" do
+      
+      subject { SimpleTodo::Interactors::CompleteTodo.new( @person_repository, @person_uuid) }
       
       before do
         @todo   = SimpleTodo::Entity::Todo.new( uuid: SecureRandom.uuid, title: "my todo item")

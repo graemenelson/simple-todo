@@ -1,6 +1,5 @@
 require './spec/unit/spec_helper'
 require './lib/repository/in_memory'
-require 'securerandom'
 
 describe SimpleTodo::Repository::InMemory::PersonRepository do
   

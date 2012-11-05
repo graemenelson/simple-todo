@@ -1,15 +1,19 @@
 module SimpleTodo
   module Interactors
     class CompleteTodo < Base
+      
+      include Mixins::LookupPerson
+      include Mixins::EnsurePerson  
         
       def initialize( person_repository, person_uuid )
-        @person_repository = person_repository
-        @person_uuid       = person_uuid
+        self.person_repository = person_repository
+        self.person_uuid       = person_uuid
       end
       
       def call( attributes = {} )
         reset_response
         extract_attributes( attributes )
+        ensure_person!
         ensure_todo_uuid!
         unless response.errors?
           todo = person.todos.select{|todo| todo_uuid == todo.uuid }.first
@@ -25,11 +29,7 @@ module SimpleTodo
       
       private
       
-      attr_reader :person_repository, :person_uuid, :todo_uuid
-      
-      def person
-        @person ||= person_repository.find_by_uuid( person_uuid )
-      end
+      attr_reader :todo_uuid
       
       def extract_attributes( attributes = {} )
         @todo_uuid = attributes[:todo_uuid]
