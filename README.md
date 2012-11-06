@@ -4,7 +4,6 @@ This is my take on building a ruby app based on [Entity-Boundary-Interactor patt
 
 I am big on Test Driven Development, and I want my tests to be "FAST".  Even a fresh rails project is a little too slow for my taste on start.  I want my tests to feel as if they finish before I finishing type "rake".
 
-## Work In Progress
+## The Rails App
 
-I plan to continue work on this code, currently it only handles adding a person and authenticating a person.  I also want to write up a series of articles on how and why, and plugging into a framework like Rails, Sinatra, etc.
-
+Added a simple rails app that uses this code, it can be viewed at [simple-todo-rails](https://github.com/graemenelson/simple-todo-rails).
