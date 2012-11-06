@@ -2,8 +2,6 @@ module SimpleTodo
   module Interactors
     class Response
                 
-        
-      attr_accessor :entity
       attr_reader   :errors
         
       def initialize

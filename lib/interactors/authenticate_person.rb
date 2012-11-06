@@ -2,6 +2,8 @@ module SimpleTodo
   module Interactors
     class AuthenticatePerson < Base
    
+      attr_reader :person
+   
       def initialize(repository, encryptor)
         @repository = repository
         @encryptor  = encryptor
@@ -12,7 +14,7 @@ module SimpleTodo
         extract_attributes!( attributes )
         person = repository.find_by_email( email )
         if person && valid_password_for?( person )
-          response.entity = person
+          @person = person
         else
           response.errors.add( :login, "Invalid email and/or password." )
         end

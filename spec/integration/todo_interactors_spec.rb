@@ -44,10 +44,11 @@ describe "Todo" do
           @response.errors?.must_equal( false )
         end
         
-        it "should assign the todo as the response entity" do
-          @response.entity.title.must_equal( "this is my next todo" )
-          @response.entity.uuid.wont_be_nil
-          @response.entity.completed_at.must_be_nil
+        it "should assign the todo" do
+          todo = subject.todo
+          todo.title.must_equal( "this is my next todo" )
+          todo.uuid.wont_be_nil
+          todo.completed_at.must_be_nil
         end
         
         it "should add a todo with the given title to @jim" do

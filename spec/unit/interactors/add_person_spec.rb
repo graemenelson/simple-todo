@@ -67,12 +67,16 @@ describe SimpleTodo::Interactors::AddPerson do
         @response = subject.call( email: "sam@somewhere.com", password: "mypassword" )
       end
       
-      it "should return a response with no errors, and entity" do        
+      it "should return a response with no errors" do        
         @response.errors.must_be_empty
-        @response.entity.email.must_equal @person.email
-        @response.entity.salt.must_equal @person.salt
-        @response.entity.encrypted_password.must_equal @person.encrypted_password
-        @response.entity.uuid.wont_be_nil
+      end
+      
+      it "should assign a person with the expected attributes" do
+        person = subject.person
+        person.email.must_equal( @person.email )
+        person.salt.must_equal( @person.salt )
+        person.encrypted_password.must_equal( @person.encrypted_password )
+        person.uuid.wont_be_nil
       end
       
       it "should call all the expected repository calls" do

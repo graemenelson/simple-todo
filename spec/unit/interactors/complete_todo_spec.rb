@@ -83,12 +83,12 @@ describe SimpleTodo::Interactors::CompleteTodo do
         @response.errors?.must_equal( false )
       end
       
-      it "should return a todo item as the response entity" do
-        @response.entity.must_equal( @todo )
+      it "should assign todo item to the interactor" do
+        subject.todo.must_equal( @todo )
       end
       
       it "should have marked the todo item as completed" do
-        @response.entity.completed?.must_equal( true )
+        subject.todo.completed?.must_equal( true )
       end
       
       it "should call the expected methods on @person_repository" do

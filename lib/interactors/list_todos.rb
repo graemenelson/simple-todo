@@ -20,7 +20,7 @@ module SimpleTodo
         reset_response
         extract_attributes( attributes )
         ensure_person!
-        unless response.errors?
+        unless response.errors?          
           @todos = paginate_todos_for_person
         end
         response

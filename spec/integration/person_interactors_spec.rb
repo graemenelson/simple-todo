@@ -2,11 +2,13 @@ require './spec/integration/spec_helper'
 require './lib/encryptors/bcrypt'
 
 describe "Person" do
+
+  Person = SimpleTodo::Entity::Person
   
   before do
     @repository   = SimpleTodo::Repository.for( :person )
     @encryptor    = SimpleTodo::Encryptors::BCrypt.new(::BCrypt::Password, 1)
-    @repository.clear
+    @repository.clear    
   end
   
   it "should have no entries in the repository" do
@@ -31,8 +33,8 @@ describe "Person" do
         @response.errors?.must_equal( false )
       end
       
-      it "should have a person entity on the response" do
-        person = @response.entity
+      it "should have a person" do
+        person = subject.person
         person.email.must_equal( "sam@somewhere.com" )
         person.salt.must_equal( @encryptor.salt )
         @encryptor.match?( person.encrypted_password, "mypassword", person.salt ).must_equal( true )
@@ -41,7 +43,7 @@ describe "Person" do
       describe "try adding another person with the same email" do
         
         before do
-          @person = @response.entity
+          @person = subject.person
           
           @existing_salt                = @person.salt
           @existing_encrypted_password  = @person.encrypted_password.to_s
@@ -102,8 +104,10 @@ describe "Person" do
     
     before do
       @add_person = SimpleTodo::Interactors::AddPerson.new( @repository, @encryptor )
-      @jim        = @add_person.call({ email: "jim@aol.com", password: "mypassword" }).entity
-      @sara       = @add_person.call({ email: "sara@somewhere.com", password: "mysecret" }).entity
+      @add_person.call({ email: "jim@aol.com", password: "mypassword" })
+      @jim        = @add_person.person
+      @add_person.call({ email: "sara@somewhere.com", password: "mysecret" })
+      @sara       = @add_person.person
     end
     
     it "should have 2 people in the repository" do
@@ -152,8 +156,8 @@ describe "Person" do
         @response.errors?.must_equal( false )
       end
       
-      it "should assign @jim as the entity for the response" do
-        @response.entity.must_equal( @jim )
+      it "should assign @jim as person" do
+        subject.person.must_equal( @jim )
       end
       
     end
@@ -165,9 +169,10 @@ describe "Person" do
     subject { SimpleTodo::Interactors::FindPerson.new( @repository ) }
     
     before do
-      @add_person = SimpleTodo::Interactors::AddPerson.new( @repository, @encryptor )
-      @jim        = @add_person.call({ email: "jim@aol.com", password: "mypassword" }).entity
-      @sara       = @add_person.call({ email: "sara@somewhere.com", password: "mysecret" }).entity
+      @jim  = Person.new( uuid: SecureRandom.uuid, email: "jim@aol.com" )
+      @sara = Person.new( uuid: SecureRandom.uuid, email: "sara@somewhere.com" )      
+      @repository.save( @jim )
+      @repository.save( @sara )
     end
     
     it "should return an error if uuid is invalid" do
@@ -178,7 +183,7 @@ describe "Person" do
     it "should return @jim with @jim uuid" do
       response = subject.call( uuid: @jim.uuid )
       response.errors?.must_equal( false )
-      response.entity.must_equal( @jim )
+      subject.person.must_equal( @jim )
     end
     
   end

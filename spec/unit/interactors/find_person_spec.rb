@@ -40,6 +40,24 @@ describe SimpleTodo::Interactors::FindPerson do
     
     describe "with valid uuid" do
       
+      before do
+        @person = OpenStruct.new
+        @repository.expect( :find_by_uuid, @person, [@uud] )
+        @response = subject.call( uuid: @uuid )
+      end
+      
+      it "should return a response with no errors" do
+        @response.errors?.must_equal( false )
+      end
+      
+      it "should assign person to the interactor" do
+        subject.person.must_equal( @person )
+      end
+      
+      it "should call all the expected methods on @repository" do
+        @repository.verify
+      end
+      
     end
     
   end

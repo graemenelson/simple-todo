@@ -66,8 +66,8 @@ describe SimpleTodo::Interactors::AddTodo do
         @response.errors?.must_equal( false )
       end
       
-      it "should assign the todo as the entity" do
-        @response.entity.must_equal( @todo )
+      it "should assign the todo to the interactor" do
+        subject.todo.must_equal( @todo )
       end
       
       it "should call all the expected methods on @repository" do

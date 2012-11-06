@@ -5,6 +5,9 @@ module SimpleTodo
     # If a person with the same email address already exists, an EmailAlreadyTaken
     # expection will be raised.
     class AddPerson < Base
+      
+      attr_reader :person
+      
       # Expects a repository, encryptor and attributes for creating
       # the new person.
       #
@@ -32,9 +35,8 @@ module SimpleTodo
         ensure_valid_password!
         unless response.errors?
           salt = encryptor.salt
-          person = Entity::Person.new( uuid: generate_uuid, email: email, salt: encryptor.salt, encrypted_password: encryptor.encrypt(password) )
-          repository.save( person )
-          response.entity = person
+          @person = Entity::Person.new( uuid: generate_uuid, email: email, salt: encryptor.salt, encrypted_password: encryptor.encrypt(password) )
+          repository.save( @person )
         end        
         response
       end

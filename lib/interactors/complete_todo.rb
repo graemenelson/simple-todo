@@ -5,6 +5,8 @@ module SimpleTodo
       include Mixins::LookupPerson
       include Mixins::EnsurePerson  
         
+      attr_reader :todo
+        
       def initialize( person_repository, person_uuid )
         self.person_repository = person_repository
         self.person_uuid       = person_uuid
@@ -19,7 +21,7 @@ module SimpleTodo
           todo = person.todos.select{|todo| todo_uuid == todo.uuid }.first
           if todo
             todo.completed_at = current_time
-            response.entity   = todo
+            @todo   = todo
           else
             response.errors.add(:todo_uuid, "is invalid.")
           end

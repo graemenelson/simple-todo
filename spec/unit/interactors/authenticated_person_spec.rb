@@ -49,12 +49,15 @@ describe SimpleTodo::Interactors::AuthenticatePerson do
         
         before do
           @encryptor.expect( :match?, true, ["akjadflkjasdfjd", "goodpassword", "mysalt"] )
+          @response = subject.call( {email: "sam@somewhere.com", password: "badpassword"} )
         end
         
-        it "should assign the person to the response entity" do
-          response = subject.call( {email: "sam@somewhere.com", password: "badpassword"} )
-          response.errors?.must_equal( false )
-          response.entity.must_equal( @person )
+        it "should return a response with no errors" do          
+          @response.errors?.must_equal( false )
+        end
+        
+        it "should assign @person to the interactor" do
+          subject.person.must_equal( @person )          
         end
         
       end
