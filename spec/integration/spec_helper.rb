@@ -6,3 +6,6 @@ require './lib/simple-todo'
 require './lib/repository/in_memory'
 
 SimpleTodo::Repository.configuration({ person: SimpleTodo::Repository::InMemory::PersonRepository.new })
+
+Person = SimpleTodo::Entity::Person
+Todo   = SimpleTodo::Entity::Todo

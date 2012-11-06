@@ -4,7 +4,7 @@ module SimpleTodo
    
       attr_reader :person
    
-      def initialize(repository, encryptor)
+      def initialize(repository, encryptor = SimpleTodo::Encryptors::BCrypt.new)
         @repository = repository
         @encryptor  = encryptor
       end

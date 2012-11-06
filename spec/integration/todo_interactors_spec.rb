@@ -3,9 +3,6 @@ require 'securerandom'
 
 describe "Todo" do
   
-  Person = SimpleTodo::Entity::Person
-  Todo   = SimpleTodo::Entity::Todo
-  
   before do
     @person_repository = SimpleTodo::Repository.for(:person)
     @person_repository.clear

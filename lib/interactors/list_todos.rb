@@ -20,7 +20,7 @@ module SimpleTodo
         reset_response
         extract_attributes( attributes )
         ensure_person!
-        unless response.errors?          
+        unless response.errors?
           @todos = paginate_todos_for_person
         end
         response
@@ -39,7 +39,7 @@ module SimpleTodo
       # won't work for all cases.  once we start experiencing 
       # issues, we can move to a Pagination class.
       def paginate_todos_for_person
-        persons_todos = person.todos
+        persons_todos = person.todos.select{|todo| todo.completed_at.nil? }
         if page && page_size          
           persons_todos = persons_todos.slice(index_for_pagination, page_size)
         end

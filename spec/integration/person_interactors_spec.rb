@@ -3,8 +3,6 @@ require './lib/encryptors/bcrypt'
 
 describe "Person" do
 
-  Person = SimpleTodo::Entity::Person
-  
   before do
     @repository   = SimpleTodo::Repository.for( :person )
     @encryptor    = SimpleTodo::Encryptors::BCrypt.new(::BCrypt::Password, 1)

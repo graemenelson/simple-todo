@@ -24,33 +24,57 @@ describe SimpleTodo::Interactors::ListTodos do
       end
       
     end
-    
+        
     describe "with uuid for valid person" do
       
       subject { SimpleTodo::Interactors::ListTodos.new( @repository, @person_uuid ) }
 
       before do
-        @todos  = (1..20).to_a
+        @todos  = (1..20).collect{ |i| SimpleTodo::Entity::Todo.new( uuid: SecureRandom.uuid, title: "Title #{i}") }
         @person = OpenStruct.new( todos: @todos )
         @repository.expect( :find_by_uuid, @person, [@person_uuid] )        
       end  
             
       describe "with no attributes to the call" do
         
-        before do
-          @response = subject.call
-        end
+        describe "with no completed todos" do
 
-        it "should not have any errors on @response" do
-          @response.errors?.must_equal( false )
+          before do
+            @response = subject.call
+          end
+        
+          it "should not have any errors on @response" do
+            @response.errors?.must_equal( false )
+          end
+              
+          it "should set the todos attribute to all of the person's todos" do
+            subject.todos.must_equal( @todos )
+          end
+              
+          it "should call all the expected methods on @repository" do
+            @repository.verify
+          end
+          
         end
-      
-        it "should set the todos attribute to all of the person's todos" do
-          subject.todos.must_equal( @todos )
-        end
-      
-        it "should call all the expected methods on @repository" do
-          @repository.verify
+        
+        describe "with completed todos" do
+          
+          before do
+            @completed_1 = @todos[0]
+            @completed_2 = @todos[9]
+            @completed_1.completed_at = Time.now
+            @completed_2.completed_at = Time.now
+            @response = subject.call
+          end
+          
+          it "should not return @completed_1 in the todos" do
+            subject.todos.wont_include( @completed_1 )
+          end
+          
+          it "should not return @completed_2 in the todos" do
+            subject.todos.wont_include( @completed_2 )
+          end
+          
         end
         
       end
@@ -65,8 +89,8 @@ describe SimpleTodo::Interactors::ListTodos do
           @response.errors?.must_equal( false )
         end
         
-        it "should return only 1 through 5 of the todos" do
-          subject.todos.must_equal( [1, 2, 3, 4, 5] )
+        it "should return only 1 through 5 of the todos" do          
+          subject.todos.must_equal( @todos[0,5] )
         end
         
         it "should call all the expected methods on @repository" do
@@ -86,7 +110,7 @@ describe SimpleTodo::Interactors::ListTodos do
         end
         
         it "should return 6 through 10" do
-          subject.todos.must_equal( [6, 7, 8, 9, 10] )
+          subject.todos.must_equal( @todos[5,5] )
         end
         
         it "should call all the expected methods on @repository" do
