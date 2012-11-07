@@ -21,6 +21,7 @@ module SimpleTodo
           todo = person.todos.select{|todo| todo_uuid == todo.uuid }.first
           if todo
             todo.completed_at = current_time
+            person_repository.save( person )
             @todo   = todo
           else
             response.errors.add(:todo_uuid, "is invalid.")

@@ -76,6 +76,7 @@ describe SimpleTodo::Interactors::CompleteTodo do
         @todo   = SimpleTodo::Entity::Todo.new( uuid: SecureRandom.uuid, title: "my todo item")
         @person = OpenStruct.new( todos: [ @todo ] )
         @person_repository.expect( :find_by_uuid, @person, [@person_uuid] )
+        @person_repository.expect( :save, @person, [@person] )
         @response = subject.call({ todo_uuid: @todo.uuid })
       end
       
